@@ -1,0 +1,85 @@
+vars:
+  namespace: slayers
+
+terraform:
+  vars: {}
+
+  backend_type: s3 # s3, remote, vault, etc.
+  backend:
+    s3:
+      encrypt: true
+      bucket: "slayers-uw2-root-tfstate"
+      key: "terraform.tfstate"
+      dynamodb_table: "slayers-uw2-root-tfstate-lock"
+      role_arn: "arn:aws:iam::120651071416:role/slayers-gbl-root-terraform"
+      acl: "bucket-owner-full-control"
+      region: "us-east-1"
+    remote: {}
+    vault: {}
+
+# Include module names here.  Add to: components/terraform/<foo>
+
+components:
+  terraform:
+    tfstate-backend:
+      backend:
+        s3:
+          workspace_key_prefix: "tfstate-backend"
+          region: "us-east-1"
+          role_arn: null
+
+    account:
+      backend:
+        s3:
+          workspace_key_prefix: "account"
+          role_arn: null
+
+    account-map:
+      backend:
+        s3:
+          workspace_key_prefix: "account-map"
+          role_arn: null
+
+    account-settings:
+      backend:
+        s3:
+          workspace_key_prefix: "account-settings"
+          role_arn: null
+      vars:
+        minimum_password_length: 10
+        maximum_password_age: 2000
+
+    dns-delegated:
+      backend:
+        s3:
+          workspace_key_prefix: "dns-delegated"
+
+    dns-primary:
+      backend:
+        s3:
+          workspace_key_prefix: "dns-primary"
+
+    iam-delegated-roles:
+      backend:
+        s3:
+          workspace_key_prefix: "iam-delegated-roles"
+          role_arn: null
+
+    iam-primary-roles:
+      backend:
+        s3:
+          workspace_key_prefix: "iam-primary-roles"
+          role_arn: null
+
+    vpc:
+      vars:
+      backend:
+        s3:
+          workspace_key_prefix: "vpc"
+          
+      env: 
+      
+    ecr:
+      backend:
+        s3:
+          workspace_key_prefix: "ecr"

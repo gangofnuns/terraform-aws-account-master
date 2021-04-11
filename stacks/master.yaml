@@ -1,0 +1,81 @@
+vars:
+  namespace: metasaur
+  environment: ue1
+  stage: dev
+  region: us-east-1
+  #account_alias_template: "${var.name}-%s-%s"
+
+terraform:
+  vars: {}
+
+components:
+  terraform:
+
+    account-settings: 
+
+    account:
+      vars:
+        account_email_format: awsmetasaur+%s@gmail.com
+        account_iam_user_access_to_billing: DENY
+        organization_enabled: true
+        aws_service_access_principals:
+          - cloudtrail.amazonaws.com
+          - ram.amazonaws.com
+        enabled_policy_types:
+          - SERVICE_CONTROL_POLICY
+          - TAG_POLICY
+        organization_config:
+          root_account_stage_name: master
+          accounts: 
+            - name: master
+              tags: 
+                eks: false
+                root: true
+          organization:
+            service_control_policies:
+              - DenyS3BucketsPublicAccess
+          organizational_units:
+            - name: data
+              accounts:  
+                - name: devdata
+                  tags:
+                    eks: true
+              service_control_policies:
+                - DenyLeavingOrganization
+            - name: platform
+              accounts: 
+                - name: devplatform
+                  tags:
+                    eks: true
+                    foo: bar
+              service_control_policies:
+                - DenyLeavingOrganization
+            - name: mgmt
+              accounts: 
+                - name: demo
+                  tags:
+                    foo: bar
+                    eks: true
+                - name: audit
+                  tags:
+                    foo: bar
+                    eks: false
+                - name: cnc
+                  tags:
+                    foo: bar
+                    eks: true
+                - name: security
+                  tags:
+                    foo: bar
+                    eks: false
+                - name: identity
+                  tags:
+                    foo: bar
+                    eks: false
+                - name: dns
+                  tags:
+                    foo: bar
+                    eks: false
+              service_control_policies:
+                - DenyLeavingOrganization
+

@@ -1,0 +1,16 @@
+import:
+  - globals
+
+vars:
+  environment: uw2
+
+terraform:
+  vars: {}
+  settings:
+    version: 0
+
+components:
+  terraform:
+    vpc:
+      vars:
+        #availability_zones: ["us-west-2b", "us-west-2c", "us-west-2d"]

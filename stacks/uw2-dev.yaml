@@ -1,0 +1,44 @@
+import:
+- uw2-globals
+
+vars:
+  stage: dev
+
+terraform:
+  vars: {}
+
+helmfile:
+  vars:
+    account_number: "455221689874"
+
+components:
+  terraform:
+
+    tfstate-backend:
+      vars:
+        name: tfstate
+        force_destroy: false
+        prevent_unencrypted_uploads: true
+        enable_server_side_encryption: true
+
+    dns-delegated:
+      vars:
+        request_acm_certificate: true
+        zone_config:
+          - subdomain: dev
+            zone_name: uw2.qv-int.com
+      settings:
+
+    vpc:
+      vars:
+        cidr_block: "10.101.0.0/22"
+      settings:
+        nat_gateway_enabled  = true
+        nat_instance_enabled = false
+        vpc_flow_logs_enabled = false
+    dynamic_subnets:
+      vars:
+      settings:
+        namespace  = "metasaur"
+        stage      = "dev"
+        name       = "audio"
